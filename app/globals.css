@@ -7,32 +7,29 @@
   --font-body: 'DM Sans', sans-serif;
   --font-accent: 'Cormorant Garamond', serif;
 
-  --color-mountain-50: #f0f4f0;
-  --color-mountain-100: #dce8dc;
-  --color-mountain-200: #b8d1b8;
-  --color-mountain-300: #8db58d;
-  --color-mountain-400: #5f925f;
-  --color-mountain-500: #3d6e3d;
-  --color-mountain-600: #2e5530;
-  --color-mountain-700: #1f3d22;
-  --color-mountain-800: #152b17;
-  --color-mountain-900: #0a160b;
+  --color-mountain-50: #F8F5F0;
+  --color-mountain-100: #F0EDE6;
+  --color-mountain-200: #e5e0d6;
+  --color-mountain-300: #D9C9B0;
+  --color-mountain-400: #c5b8a0;
+  --color-mountain-500: #a89d8b;
+  --color-mountain-600: #8c816d;
+  --color-mountain-700: #6f6451;
+  --color-mountain-800: #4A5F5F;
+  --color-mountain-900: #1F2A2A;
 
-  --color-gold-300: #f0c96a;
-  --color-gold-400: #e8b84d;
-  --color-gold-500: #d4983a;
-  --color-gold-600: #b87c2a;
+  --color-gold-300: #5baeb3;
+  --color-gold-400: #3A8A8F;
+  --color-gold-500: #2e7377;
+  --color-gold-600: #235c5f;
+  --color-gold-700: #2E6B5E;
 
-  --color-crimson-400: #c94040;
-  --color-crimson-500: #b02e2e;
-  --color-crimson-600: #922020;
+  --color-snow-100: #ffffff;
+  --color-snow-200: #f0ede6;
 
-  --color-snow-100: #f8f6f2;
-  --color-snow-200: #ede9e0;
-
-  --background-image-mountain-gradient: linear-gradient(135deg, #0a160b 0%, #1f3d22 40%, #2e5530 70%, #3d6e3d 100%);
-  --background-image-gold-gradient: linear-gradient(135deg, #f0c96a 0%, #d4983a 100%);
-  --background-image-sky-gradient: linear-gradient(180deg, #1a3a5c 0%, #2e6ea6 50%, #87ceeb 100%);
+  --background-image-mountain-gradient: linear-gradient(135deg, #F0EDE6 0%, #e5e0d6 40%, #D9C9B0 70%, #c5b8a0 100%);
+  --background-image-gold-gradient: linear-gradient(135deg, #5baeb3 0%, #3A8A8F 100%);
+  --background-image-sky-gradient: linear-gradient(180deg, #F0EDE6 0%, #F8F5F0 50%, #F8F5F0 100%);
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-slow: float 9s ease-in-out infinite;
@@ -46,9 +43,9 @@
   --animate-rotate-slow: rotateSlow 30s linear infinite;
   --animate-marquee: marquee 30s linear infinite;
 
-  --shadow-mountain: 0 25px 80px -15px rgba(10, 22, 11, 0.6);
-  --shadow-gold: 0 10px 40px -10px rgba(212, 152, 58, 0.5);
-  --shadow-card: 0 4px 30px rgba(0,0,0,0.12), 0 1px 8px rgba(0,0,0,0.08);
+  --shadow-mountain: 0 25px 80px -15px rgba(31, 42, 42, 0.1);
+  --shadow-gold: 0 10px 40px -10px rgba(58, 138, 143, 0.4);
+  --shadow-card: 0 4px 30px rgba(0,0,0,0.06), 0 1px 8px rgba(0,0,0,0.04);
 }
 
 :root {
@@ -63,28 +60,28 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: #0a0e0a;
-  color: #f8f6f2;
+  background-color: #F8F5F0;
+  color: #1F2A2A;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: rgba(212, 152, 58, 0.4);
-  color: #f8f6f2;
+  background: rgba(58, 138, 143, 0.3);
+  color: #ffffff;
 }
 
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a160b;
+  background: #F0EDE6;
 }
 ::-webkit-scrollbar-thumb {
-  background: #3d6e3d;
+  background: #3A8A8F;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #d4983a;
+  background: #5baeb3;
 }
 
 .font-display { font-family: var(--font-display); }
@@ -92,7 +89,7 @@ body {
 .font-body { font-family: var(--font-body); }
 
 .gold-shimmer {
-  background: linear-gradient(90deg, #d4983a, #f0c96a, #e8b84d, #d4983a);
+  background: linear-gradient(90deg, #2e7377, #5baeb3, #3A8A8F, #2e7377);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -128,8 +125,8 @@ body {
 }
 
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 20px rgba(212, 152, 58, 0.4); }
-  50% { box-shadow: 0 0 40px rgba(212, 152, 58, 0.8); }
+  0%, 100% { box-shadow: 0 0 20px rgba(58, 138, 143, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(58, 138, 143, 0.8); }
 }
 
 @keyframes slideInLeft {
@@ -187,7 +184,7 @@ body {
 }
 
 .img-placeholder {
-  background: linear-gradient(135deg, #1f3d22 0%, #2e5530 50%, #3d6e3d 100%);
+  background: linear-gradient(135deg, #D9C9B0 0%, #c5b8a0 50%, #a89d8b 100%);
   position: relative;
   overflow: hidden;
 }

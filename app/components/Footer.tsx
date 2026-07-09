@@ -3,10 +3,10 @@ import { guide } from "@/app/data/portfolio";
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#030705] border-t border-white/5 py-16 overflow-hidden">
+    <footer className="relative bg-[#1F2A2A] border-t border-white/5 py-16 overflow-hidden">
       {/* Himalaya silhouette */}
       <svg className="absolute bottom-0 w-full opacity-5" viewBox="0 0 1440 120" preserveAspectRatio="xMidYMax slice">
-        <path d="M0,120 L0,70 L120,30 L240,55 L360,15 L480,45 L600,5 L720,35 L840,65 L960,25 L1080,60 L1200,40 L1320,70 L1440,50 L1440,120 Z" fill="#5f925f"/>
+        <path d="M0,120 L0,70 L120,30 L240,55 L360,15 L480,45 L600,5 L720,35 L840,65 L960,25 L1080,60 L1200,40 L1320,70 L1440,50 L1440,120 Z" fill="#D9C9B0"/>
       </svg>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -14,7 +14,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-mountain-900 font-display font-bold">PS</div>
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-snow-100 font-display font-bold">AS</div>
               <div>
                 <div className="font-display text-snow-100 font-bold">{guide.name}</div>
                 <div className="font-body text-gold-400 text-xs tracking-widest uppercase">Nepal Guide</div>

@@ -9,17 +9,17 @@ export default function Testimonials() {
   const [active, setActive] = useState(0);
 
   return (
-    <section id="testimonials" ref={ref} className="relative py-32 bg-[#070d07] overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(45,90,45,0.1),transparent_70%)]" />
+    <section id="testimonials" ref={ref} className="relative py-32 bg-[#F8F5F0] overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(58,138,143,0.04),transparent_70%)]" />
       
       {/* Marquee strip */}
-      <div className="absolute top-12 left-0 right-0 overflow-hidden opacity-10 pointer-events-none">
+      <div className="absolute top-12 left-0 right-0 overflow-hidden opacity-[0.04] pointer-events-none">
         <div className="flex animate-marquee whitespace-nowrap">
           {Array(8).fill("NEPAL · 尼泊尔 · नेपाल · HIMALAYA · 喜马拉雅 · हिमालय · ").map((t, i) => (
-            <span key={i} className="font-display text-2xl text-snow-100 mr-8">{t}</span>
+            <span key={i} className="font-display text-2xl text-mountain-900 mr-8">{t}</span>
           ))}
           {Array(8).fill("NEPAL · 尼泊尔 · नेपाल · HIMALAYA · 喜马拉雅 · हिमालय · ").map((t, i) => (
-            <span key={`b${i}`} className="font-display text-2xl text-snow-100 mr-8">{t}</span>
+            <span key={`b${i}`} className="font-display text-2xl text-mountain-900 mr-8">{t}</span>
           ))}
         </div>
       </div>
@@ -36,10 +36,10 @@ export default function Testimonials() {
             <span className="font-body text-gold-400 text-xs tracking-[0.3em] uppercase">Testimonials · 客户评价</span>
             <div className="w-12 h-px bg-gold-500" />
           </div>
-          <h2 className="font-display text-5xl sm:text-6xl font-bold text-snow-100 mb-4">
+          <h2 className="font-display text-5xl sm:text-6xl font-bold text-mountain-900 mb-4">
             Words from <span className="gold-shimmer">Travelers</span>
           </h2>
-          <p className="font-body text-snow-200/60 max-w-lg mx-auto">
+          <p className="font-body text-mountain-600 max-w-lg mx-auto">
             500+ groups, countless memories. Here is what some of them say.
           </p>
         </motion.div>
@@ -53,10 +53,10 @@ export default function Testimonials() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="glass-card rounded-3xl p-10 border border-white/8 text-center relative overflow-hidden"
+              className="bg-white rounded-3xl p-10 border border-mountain-300/40 text-center relative overflow-hidden shadow-sm"
             >
               {/* Quote mark */}
-              <div className="absolute top-6 left-8 font-display text-8xl text-gold-500/10 leading-none select-none">"</div>
+              <div className="absolute top-6 left-8 font-display text-8xl text-gold-400/10 leading-none select-none">"</div>
               
               {/* Stars */}
               <div className="flex justify-center gap-1 mb-6">
@@ -67,7 +67,7 @@ export default function Testimonials() {
                 ))}
               </div>
 
-              <blockquote className="font-accent text-xl sm:text-2xl italic text-snow-100/90 leading-relaxed mb-8 relative z-10">
+              <blockquote className="font-accent text-xl sm:text-2xl italic text-mountain-900 leading-relaxed mb-8 relative z-10">
                 "{testimonials[active].text}"
               </blockquote>
 
@@ -76,9 +76,9 @@ export default function Testimonials() {
                   {testimonials[active].avatar}
                 </div>
                 <div className="text-left">
-                  <p className="font-body font-semibold text-snow-100">{testimonials[active].name}</p>
+                  <p className="font-body font-semibold text-mountain-900">{testimonials[active].name}</p>
                   <p className="font-accent text-gold-400 text-sm italic">{testimonials[active].chinese} · {testimonials[active].city}</p>
-                  <p className="font-body text-snow-200/40 text-xs">{testimonials[active].trip}</p>
+                  <p className="font-body text-mountain-500 text-xs">{testimonials[active].trip}</p>
                 </div>
               </div>
             </motion.div>
@@ -91,7 +91,7 @@ export default function Testimonials() {
                 key={i}
                 onClick={() => setActive(i)}
                 className={`transition-all duration-300 rounded-full ${
-                  i === active ? "w-8 h-2 bg-gold-400" : "w-2 h-2 bg-mountain-600 hover:bg-mountain-400"
+                  i === active ? "w-8 h-2 bg-gold-400" : "w-2 h-2 bg-mountain-300 hover:bg-mountain-400"
                 }`}
                 aria-label={`Testimonial ${i + 1}`}
               />
@@ -110,8 +110,8 @@ export default function Testimonials() {
               onClick={() => setActive(i)}
               className={`text-left p-5 rounded-2xl border transition-all duration-300 hover-lift ${
                 i === active
-                  ? "border-gold-500/40 bg-gold-500/5"
-                  : "border-white/5 glass-card hover:border-white/10"
+                  ? "border-gold-400/40 bg-mountain-100"
+                  : "border-mountain-300/40 bg-white hover:border-mountain-300"
               }`}
             >
               <div className="flex items-center gap-3 mb-3">
@@ -119,11 +119,11 @@ export default function Testimonials() {
                   {t.avatar}
                 </div>
                 <div>
-                  <p className="font-body text-snow-100 text-sm font-semibold leading-tight">{t.name}</p>
-                  <p className="font-body text-snow-200/40 text-xs">{t.city}</p>
+                  <p className="font-body text-mountain-900 text-sm font-semibold leading-tight">{t.name}</p>
+                  <p className="font-body text-mountain-500 text-xs">{t.city}</p>
                 </div>
               </div>
-              <p className="font-body text-snow-200/60 text-xs leading-relaxed line-clamp-3">{t.text}</p>
+              <p className="font-body text-mountain-700 text-xs leading-relaxed line-clamp-3">{t.text}</p>
             </motion.button>
           ))}
         </div>

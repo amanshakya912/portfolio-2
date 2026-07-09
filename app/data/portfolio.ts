@@ -1,5 +1,5 @@
 export const guide = {
-  name: "Pemba Sherpa",
+  name: "Amir Shakya",
   title: "Senior Mountain & Cultural Guide",
   subtitle: "Bridging Nepal & China, One Summit at a Time",
   tagline: "15+ Years · 500+ Groups · Certified Guide",
@@ -11,7 +11,7 @@ export const guide = {
   groupsGuided: 500,
   peaksVisited: 12,
   districtsKnown: 23,
-  email: "pemba.sherpa@example.com",
+  email: "amir.shakya@gmail.com",
   phone: "+977 98XXXXXXXX",
   agency: "Himalaya Horizon Travel Pvt. Ltd.",
 };
