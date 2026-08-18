@@ -3,6 +3,8 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 const floatingWords = ["险峻", "神圣", "壮观", "सुन्दर", "शान्त", "अद्भुत"];
 
 const socialLinks = [
@@ -10,6 +12,13 @@ const socialLinks = [
   { label: "WhatsApp", icon: "whatsapp" },
   { label: "Instagram", icon: "instagram" },
   { label: "Facebook", icon: "facebook" },
+];
+
+const heroThumbs = [
+  { path: "607630466_25578546805119759_4616492585880702082_n.jpg", label: "TEMPLE", icon: "🛕", className: "from-gold-400/70 to-mountain-500", real: true },
+  { path: "518335262_24150939037880550_6467125705180450735_n.jpg", label: "TRAIL", icon: "⛰️", className: "from-mountain-300 to-mountain-500", real: true },
+  { path: "565128548_24936310506010062_2824124563101326087_n.jpg", label: "HIMALAYA", icon: "🏔️", className: "from-mountain-400 to-mountain-600", real: true },
+  { path: "hero-5.jpg", label: "CULTURE", icon: "🎎", className: "from-gold-400/50 to-mountain-600", real: false },
 ];
 
 function SocialIcon({ icon }: { icon: string }) {
@@ -30,7 +39,7 @@ function SocialIcon({ icon }: { icon: string }) {
     case "instagram":
       return (
         <svg className={common} viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.74 3.74 0 0 1-1.38-.9 3.74 3.74 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.18-.46.39-.79.74-1.13.34-.35.67-.56 1.13-.74.35-.14.87-.3 1.83-.34C8.42 2.17 8.8 2.16 12 2.16Zm0 2.16c-3.15 0-3.5.01-4.73.07-.96.04-1.48.2-1.83.34-.46.18-.79.39-1.13.74-.35.34-.56.67-.74 1.13-.14.35-.3.87-.34 1.83-.06 1.23-.07 1.58-.07 4.73s.01 3.5.07 4.73c.04.96.2 1.48.34 1.83.18.46.39.79.74 1.13.34.35.67.56 1.13.74.35.14.87.3 1.83.34 1.23.06 1.58.07 4.73.07s3.5-.01 4.73-.07c.96-.04 1.48-.2 1.83-.34.46-.18.79-.39 1.13-.74.35-.34.56-.67.74-1.13.14-.35.3-.87.34-1.83.06-1.23.07-1.58.07-4.73s-.01-3.5-.07-4.73c-.04-.96-.2-1.48-.34-1.83a3.02 3.02 0 0 0-.74-1.13 3.02 3.02 0 0 0-1.13-.74c-.35-.14-.87-.3-1.83-.34-1.23-.06-1.58-.07-4.73-.07Zm0 3.68a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm0 6.6a2.6 2.6 0 1 0 0-5.2 2.6 2.6 0 0 0 0 5.2Zm5.1-6.76a.94.94 0 1 1-1.87 0 .94.94 0 0 1 1.87 0Z"/>
+          <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.74 3.74 0 0 1-1.38-.9 3.74 3.74 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.18-.46.39-.79.74-1.13.34-.35.67-.56 1.13-.74.35-.14.87-.3 1.83-.34C8.42 2.17 8.8 2.16 12 2.16Zm0 2.16c-3.15 0-3.5.01-4.73.07-.96.04-1.48.2-1.83.34-.46.18-.79.39-1.13.74-.35.34-.56.67-.74 1.13-.14.35-.3.87-.34 1.83-.06 1.23-.07 1.58-.07 4.73s.01 3.5.07 4.73c.04.96.2 1.48.34 1.83.18.46.39.79.74 1.13.34.35.67.56 1.13.74.35.14.87.3 1.83.34 1.23.06 1.58.07 4.73.07s3.5-.01 4.73-.07c.96-.04 1.48-.2 1.83-.34.46-.18.79-.39 1.13-.74.35-.34.56-.67.74-1.13.18-.35.3-.87.34-1.83.06-1.23.07-1.58.07-4.73s-.01-3.5-.07-4.73c-.04-.96-.2-1.48-.34-1.83a3.02 3.02 0 0 0-.74-1.13 3.02 3.02 0 0 0-1.13-.74c-.35-.14-.87-.3-1.83-.34-1.23-.06-1.58-.07-4.73-.07Zm0 3.68a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm0 6.6a2.6 2.6 0 1 0 0-5.2 2.6 2.6 0 0 0 0 5.2Zm5.1-6.76a.94.94 0 1 1-1.87 0 .94.94 0 0 1 1.87 0Z"/>
         </svg>
       );
     case "facebook":
@@ -44,13 +53,28 @@ function SocialIcon({ icon }: { icon: string }) {
   }
 }
 
+const lineReveal = (delay: number) => ({
+  initial: { y: "110%" },
+  animate: { y: 0 },
+  transition: { duration: 0.9, ease, delay },
+});
+
 export default function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
   const prefersReducedMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
-  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", prefersReducedMotion ? "0%" : "10%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", prefersReducedMotion ? "0%" : "16%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+  
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "14%"]);
+  const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const mainY = useTransform(scrollYProgress, [0, 1], ["0%", "6%"]);
+  const tileY1 = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
+  const tileY2 = useTransform(scrollYProgress, [0, 1], ["0%", "4%"]);
+  const tileY3 = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
+
   const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
@@ -63,111 +87,170 @@ export default function Hero() {
     <section
       id="home"
       ref={containerRef}
-      className="relative min-h-[100svh] flex items-end overflow-hidden bg-mountain-950"
+      className="relative min-h-[100svh] overflow-hidden bg-mountain-50"
     >
-      {/* Photo — normal cover fill, only a small overscan (5%) so the parallax
-          translateY never reveals an edge. No extra zoom, no double-scaling. */}
-      <motion.div style={{ y: bgY }} className="absolute inset-0 scale-[1]">
-        <Image
-          src="/images/amir-hero.jpeg"
-          alt="Amir Shakya overlooking the Annapurna range at sunrise"
-          fill
-          priority
-          sizes="100vw"
-          quality={90}
-          className="object-cover object-[68%_center] sm:object-[58%_center] lg:object-center"
-        />
-      </motion.div>
-
-      {/* Duotone — ONE gradient doing the job: a solid, opaque teal block on the left
-          (where the text lives) that hands off to a fully clear photo on the right.
-          No multiply pass, no vertical band, no second/third overlapping layer —
-          that stacking is exactly what was muddying the whole frame gray before. */}
-      <div
+      {/* Soft background washes */}
+      <motion.div
+        style={{ y: prefersReducedMotion ? 0 : bgY }}
         className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(30deg, #0a1f1f 0%, #0a1f1f 22%, rgba(10,31,31,0.88) 34%, rgba(10,31,31,0.4) 48%, rgba(10,31,31,0) 62%)",
-        }}
-      />
-
-      {/* Just enough darkening at the very top for the nav to stay legible — thin,
-          not a band across the middle. */}
-      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-mountain-950/50 to-transparent" />
-
-      {/* Decorative dot grid — placed in the seam where the wash fades, echoing the reference's
-          placement over open sky/water rather than floating arbitrarily */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.9, duration: 1 }}
-        className="hidden lg:grid absolute top-32 right-[18%] xl:right-[22%] grid-cols-4 gap-2.5 z-10"
+        aria-hidden="true"
       >
-        {Array.from({ length: 12 }).map((_, i) => (
-          <span key={i} className="w-1.5 h-1.5 rounded-full bg-snow-100/45" />
-        ))}
+        <div className="absolute -top-32 right-[-6%] w-[38rem] h-[38rem] rounded-full bg-gold-300/25 blur-[130px]" />
+        <div className="absolute bottom-[-18%] left-[-8%] w-[32rem] h-[32rem] rounded-full bg-mountain-300/25 blur-[130px]" />
       </motion.div>
 
-      {/* Social rail, left edge, vertical divider like the reference */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 0.8 }}
-        className="hidden md:flex flex-col items-center gap-5 absolute left-7 lg:left-10 bottom-12 z-20"
-      >
-        {socialLinks.map((s) => (
-          <a
-            key={s.label}
-            href="#"
-            aria-label={s.label}
-            className="text-snow-200/70 hover:text-gold-400 transition-colors duration-300"
+      {/* Desktop dynamic editorial collage */}
+      <div className="absolute inset-0 z-0 hidden lg:block" aria-hidden="true">
+        <div className="relative w-full max-w-7xl mx-auto h-full px-6 sm:px-10 lg:px-14">
+          
+          {/* Dynamic Collage Container */}
+          <motion.div 
+            style={{ y: prefersReducedMotion ? 0 : bgY }}
+            className="absolute right-0 top-1/2 -translate-y-1/2 w-[42vw] max-w-[560px] h-[72vh] max-h-[680px]"
           >
-            <SocialIcon icon={s.icon} />
-          </a>
-        ))}
-      </motion.div>
+            
+            {/* Main Portrait */}
+            <motion.div
+              initial={{ opacity: 0, scale: 1.1, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 1.1, ease, delay: 0.5 }}
+              className="absolute left-0 top-1/2 -translate-y-1/2 w-[58%] aspect-[4/5] overflow-hidden shadow-[0_30px_60px_-15px_rgba(28,25,23,0.35)] z-10 group"
+            >
+              <motion.div style={{ y: prefersReducedMotion ? 0 : mainY }} className="relative w-full h-full">
+                <Image
+                  src="/images/amir-hero.jpeg"
+                  alt="Amir Shakya overlooking the Annapurna range at sunrise"
+                  fill
+                  priority
+                  sizes="30vw"
+                  quality={90}
+                  className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                />
+              </motion.div>
+            </motion.div>
+
+            {/* Right Column Stack */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[38%] h-[88%] flex flex-col gap-4">
+              
+              {/* Himalaya - Top Tall */}
+              <motion.div
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, ease, delay: 0.7 }}
+                className="relative w-full flex-1 overflow-hidden shadow-[0_25px_50px_-12px_rgba(28,25,23,0.3)] group"
+              >
+                <motion.div style={{ y: prefersReducedMotion ? 0 : tileY1 }} className="relative w-full h-full">
+                  <Image
+                    src={`/images/${heroThumbs[2].path}`}
+                    alt={heroThumbs[2].label}
+                    fill
+                    sizes="20vw"
+                    quality={85}
+                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-mountain-900/70 to-transparent pt-10 px-4 pb-3 pointer-events-none">
+                    <span className="font-body text-snow-100 text-[10px] tracking-[0.2em] uppercase">
+                      {heroThumbs[2].label}
+                    </span>
+                  </div>
+                </motion.div>
+              </motion.div>
+
+              {/* Trail - Bottom Short */}
+              <motion.div
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, ease, delay: 0.85 }}
+                className="relative w-full h-[35%] overflow-hidden shadow-[0_25px_50px_-12px_rgba(28,25,23,0.3)] group"
+              >
+                <motion.div style={{ y: prefersReducedMotion ? 0 : tileY2 }} className="relative w-full h-full">
+                  <Image
+                    src={`/images/${heroThumbs[1].path}`}
+                    alt={heroThumbs[1].label}
+                    fill
+                    sizes="20vw"
+                    quality={85}
+                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-mountain-900/70 to-transparent pt-6 px-4 pb-2 pointer-events-none">
+                    <span className="font-body text-snow-100 text-[10px] tracking-[0.2em] uppercase">
+                      {heroThumbs[1].label}
+                    </span>
+                  </div>
+                </motion.div>
+              </motion.div>
+              
+            </div>
+
+            {/* Floating Temple Image - Overlapping Bottom Left */}
+            <motion.div
+              initial={{ opacity: 0, y: 50, x: -20 }}
+              animate={{ opacity: 1, y: 0, x: 0 }}
+              transition={{ duration: 1, ease, delay: 1 }}
+              className="absolute left-[12%] bottom-[5%] w-[36%] aspect-square overflow-hidden shadow-[0_35px_60px_-15px_rgba(28,25,23,0.4)] z-20 group"
+            >
+              <motion.div style={{ y: prefersReducedMotion ? 0 : tileY3 }} className="relative w-full h-full">
+                <Image
+                  src={`/images/${heroThumbs[0].path}`}
+                  alt={heroThumbs[0].label}
+                  fill
+                  sizes="20vw"
+                  quality={85}
+                  className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-mountain-900/70 to-transparent pt-8 px-4 pb-3 pointer-events-none">
+                  <span className="font-body text-snow-100 text-[10px] tracking-[0.2em] uppercase">
+                    {heroThumbs[0].label}
+                  </span>
+                </div>
+              </motion.div>
+            </motion.div>
+
+          </motion.div>
+        </div>
+      </div>
 
       {/* Content */}
       <motion.div
-        style={{ y: textY, opacity }}
-        className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:pl-24 pb-16 sm:pb-20 pt-32"
+        style={{ opacity: fade }}
+        className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 pt-28 lg:pt-32 pb-10 flex flex-col min-h-[100svh]"
       >
         <div className="flex flex-col items-start text-left max-w-2xl">
-
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.7 }}
-            className="mb-7 flex items-center gap-3 px-5 py-2 rounded-full border border-gold-400/35 bg-mountain-950/30 backdrop-blur-sm"
+            className="mb-7 flex items-center gap-3 px-5 py-2 rounded-full border border-gold-400/40 bg-white/70 backdrop-blur-sm"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse" />
-            <span className="font-body text-gold-400 text-xs tracking-[0.2em] uppercase">
+            <span className="font-body text-gold-500 text-xs tracking-[0.2em] uppercase">
               Nepal Tourism Board Certified · 专业导游
             </span>
           </motion.div>
 
           {/* Main heading */}
-          <motion.div
-            initial={{ opacity: 0, y: 26 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.9, ease: "easeOut" }}
-            className="mb-6"
-          >
-            <h1 className="font-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold leading-[0.9] text-snow-100 mb-1 drop-shadow-[0_6px_28px_rgba(0,0,0,0.5)]">
-              Amir
+          <div className="mb-6">
+            <h1 className="font-display font-bold leading-[0.9] text-mountain-900 text-6xl sm:text-7xl lg:text-[clamp(4.5rem,8vw,8rem)]">
+              <span className="block overflow-hidden">
+                <motion.span {...lineReveal(0.15)} className="block">
+                  Amir
+                </motion.span>
+              </span>
+              <span className="block overflow-hidden">
+                <motion.span {...lineReveal(0.3)} className="block italic gold-shimmer">
+                  Shakya
+                </motion.span>
+              </span>
             </h1>
-            <h1 className="font-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold leading-[0.9]">
-              <span className="gold-shimmer">Shakya</span>
-            </h1>
-          </motion.div>
+          </div>
 
           {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-            className="font-accent text-xl sm:text-2xl md:text-3xl italic text-snow-200 mb-5 max-w-xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.55)]"
+            transition={{ delay: 0.7, duration: 0.8 }}
+            className="font-accent text-xl sm:text-2xl italic text-mountain-700 mb-5 max-w-xl"
           >
             Your Bridge Between China and the Roof of the World
           </motion.p>
@@ -176,10 +259,10 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 0.6 }}
+            transition={{ delay: 0.9, duration: 0.6 }}
             className="mb-10 h-11 flex items-center"
           >
-            <span className="font-display text-2xl sm:text-3xl text-gold-300/75 mr-3">Nepal is</span>
+            <span className="font-display text-2xl sm:text-3xl text-mountain-600 mr-3">Nepal is</span>
             <span
               key={wordIndex}
               className="font-display text-2xl sm:text-3xl font-bold gold-shimmer"
@@ -189,11 +272,11 @@ export default function Hero() {
             </span>
           </motion.div>
 
-          {/* Stats — single divider-rule strip, like the reference's clean info row */}
+          {/* Stats */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1, duration: 0.8 }}
+            transition={{ delay: 1, duration: 0.8 }}
             className="flex flex-wrap items-center gap-x-9 gap-y-5 mb-11 pl-px"
           >
             {[
@@ -203,11 +286,11 @@ export default function Hero() {
               { num: "7", label: "Provinces", sub: "省份" },
             ].map((stat, i) => (
               <div key={stat.num} className="flex items-center">
-                {i > 0 && <span className="w-px h-9 bg-snow-100/20 mr-9" aria-hidden="true" />}
+                {i > 0 && <span className="w-px h-9 bg-mountain-300/50 mr-9" aria-hidden="true" />}
                 <div className="flex flex-col items-start">
                   <span className="font-display text-3xl sm:text-4xl font-bold gold-shimmer leading-none">{stat.num}</span>
-                  <span className="font-body text-snow-300 text-[11px] tracking-widest uppercase mt-1.5">{stat.label}</span>
-                  <span className="font-accent text-gold-300/65 text-[11px] italic">{stat.sub}</span>
+                  <span className="font-body text-mountain-600 text-[11px] tracking-widest uppercase mt-1.5">{stat.label}</span>
+                  <span className="font-accent text-gold-400 text-[11px] italic">{stat.sub}</span>
                 </div>
               </div>
             ))}
@@ -217,12 +300,12 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.3, duration: 0.7 }}
+            transition={{ delay: 1.15, duration: 0.7 }}
             className="flex flex-wrap gap-4"
           >
             <a
               href="#destinations"
-              className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gold-500 to-gold-400 text-mountain-950 font-body font-semibold text-sm tracking-wide overflow-hidden transition-all duration-300 hover:shadow-gold hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-300"
+              className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gold-500 to-gold-400 text-snow-100 font-body font-semibold text-sm tracking-wide overflow-hidden transition-all duration-300 hover:shadow-gold hover:scale-[1.03] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-300"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Explore Destinations
@@ -233,26 +316,113 @@ export default function Hero() {
             </a>
             <a
               href="#about"
-              className="px-8 py-4 rounded-full border border-snow-100/35 text-snow-100 font-body text-sm tracking-wide backdrop-blur-sm hover:bg-snow-100/10 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-snow-100"
+              className="px-8 py-4 rounded-full border border-mountain-900/25 text-mountain-900 font-body text-sm tracking-wide hover:bg-mountain-900/5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mountain-900"
             >
               Meet Amir
             </a>
           </motion.div>
         </div>
-      </motion.div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 0.8 }}
-        className="absolute bottom-7 right-7 sm:right-10 lg:right-24 flex flex-col items-center gap-2 z-10"
-      >
-        <span className="font-body text-snow-300/70 text-xs tracking-widest uppercase">Scroll</span>
-        <div className="w-px h-12 bg-gradient-to-b from-gold-400/60 to-transparent relative overflow-hidden">
-          {!prefersReducedMotion && (
-            <div className="absolute top-0 w-full h-4 bg-gold-400" style={{ animation: "snowFall 1.5s ease-in-out infinite" }} />
-          )}
+        {/* Mobile collage — horizontal scroller, varied tile sizes */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+          className="lg:hidden mt-12 -mx-6 px-6 flex items-center gap-3 overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <div className="relative w-52 aspect-[3/5] shrink-0 snap-start overflow-hidden">
+            <Image
+              src="/images/amir-hero.jpeg"
+              alt="Amir Shakya overlooking the Annapurna range at sunrise"
+              fill
+              priority
+              sizes="13rem"
+              quality={90}
+              className="object-cover object-center"
+            />
+          </div>
+          {[
+            { tile: heroThumbs[0], w: "w-40", aspect: "aspect-[3/4]" },
+            { tile: heroThumbs[1], w: "w-28", aspect: "aspect-square" },
+            { tile: heroThumbs[2], w: "w-44", aspect: "aspect-[16/9]" },
+            { tile: heroThumbs[3], w: "w-32", aspect: "aspect-[4/5]" },
+          ].map(({ tile, w, aspect }) => (
+            <div
+              key={tile.path}
+              title={tile.real ? undefined : `Replace with /public/images/${tile.path}`}
+              className={`${w} ${aspect} shrink-0 snap-start overflow-hidden`}
+            >
+              {tile.real ? (
+                <div className="relative w-full h-full group">
+                  <Image
+                    src={`/images/${tile.path}`}
+                    alt={`${tile.label.toLowerCase()} photo from Nepal`}
+                    fill
+                    sizes="11rem"
+                    quality={85}
+                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-mountain-900/60 via-mountain-900/10 to-transparent pt-6 px-2.5 pb-1.5 pointer-events-none">
+                    <span className="font-body text-snow-100/90 text-[9px] tracking-[0.2em] uppercase">
+                      {tile.label}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className={`w-full h-full bg-gradient-to-br ${tile.className} flex flex-col items-center justify-center`}
+                >
+                  <span className="text-xl">{tile.icon}</span>
+                  <span className="mt-1.5 font-body text-white/80 text-[9px] tracking-[0.2em] uppercase">
+                    {tile.label}
+                  </span>
+                </div>
+              )}
+            </div>
+          ))}
+        </motion.div>
+
+        <div className="flex-1" />
+
+        {/* Socials + scroll indicator */}
+        <div className="mt-12 flex items-end justify-between">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.3, duration: 0.8 }}
+            className="flex items-center gap-5"
+          >
+            {socialLinks.map((s) => (
+              <a
+                key={s.label}
+                href="#contact"
+                aria-label={s.label}
+                className="text-mountain-700 hover:text-gold-500 transition-colors duration-300"
+              >
+                <SocialIcon icon={s.icon} />
+              </a>
+            ))}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4, duration: 0.8 }}
+            className="hidden lg:flex flex-col items-center gap-2"
+          >
+            <span className="font-body text-[9px] uppercase tracking-[0.3em] text-mountain-400">
+              Scroll
+            </span>
+            <div className="w-px h-10 overflow-hidden">
+              {!prefersReducedMotion && (
+                <motion.div
+                  animate={{ y: [0, 40] }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-px h-full bg-gradient-to-b from-gold-400 to-transparent"
+                />
+              )}
+            </div>
+          </motion.div>
         </div>
       </motion.div>
     </section>

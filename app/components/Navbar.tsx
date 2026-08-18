@@ -50,19 +50,12 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          {/* Logo */}
-          <a href="#home" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-snow-100 font-display font-bold text-sm shadow-gold">
-              AS
-            </div>
-            <div className="hidden sm:block">
-              <div className="font-display text-mountain-900 text-sm font-bold tracking-wide leading-none">
-                Amir Shakya
-              </div>
-              <div className="font-body text-gold-400 text-[10px] tracking-widest uppercase">
-                Nepal Guide
-              </div>
-            </div>
+          {/* Brand */}
+          <a
+            href="#home"
+            className="group font-body text-xs font-bold uppercase tracking-[0.3em] text-mountain-900 transition-colors duration-300 hover:text-gold-500"
+          >
+            Amir Shakya
           </a>
 
           {/* Desktop nav */}
@@ -71,7 +64,7 @@ export default function Navbar() {
               <a
                 key={link.label}
                 href={link.href}
-                className={`relative px-4 py-2 font-body text-sm tracking-wide transition-colors duration-200 ${
+                className={`relative px-4 py-2 font-body text-xs tracking-wide transition-colors duration-200 ${
                   activeSection === link.href.slice(1)
                     ? "text-gold-500"
                     : "text-mountain-700 hover:text-mountain-900"
@@ -93,7 +86,7 @@ export default function Navbar() {
           <div className="hidden md:block">
             <a
               href="#contact"
-              className="px-5 py-2 rounded-full border border-gold-500/50 text-gold-400 font-body text-sm tracking-wide hover:bg-gold-500/10 transition-all duration-300 hover:border-gold-400"
+              className="px-5 py-2 rounded-full border border-gold-500/50 text-gold-400 font-body text-[11px] uppercase tracking-[0.15em] hover:bg-gold-500/10 transition-all duration-300 hover:border-gold-400"
             >
               Book a Tour
             </a>
