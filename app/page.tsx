@@ -2,7 +2,6 @@ import Navbar from "@/app/components/Navbar";
 import Hero from "@/app/components/Hero";
 import About from "@/app/components/About";
 import Destinations from "@/app/components/Destinations";
-import Experience from "@/app/components/Experience";
 import Gallery from "@/app/components/Gallery";
 import Testimonials from "@/app/components/Testimonials";
 import Contact from "@/app/components/Contact";
@@ -17,7 +16,7 @@ export default function Home() {
       <Hero />
       <About />
       <Destinations />
-      <Experience />
+      {/* <Experience /> */}
       <Gallery />
       <Testimonials />
       <Contact />

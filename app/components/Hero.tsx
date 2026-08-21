@@ -1,11 +1,9 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
-
-const floatingWords = ["险峻", "神圣", "壮观", "सुन्दर", "शान्त", "अद्भुत"];
 
 const socialLinks = [
   { label: "WeChat", icon: "wechat" },
@@ -74,14 +72,6 @@ export default function Hero() {
   const tileY1 = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
   const tileY2 = useTransform(scrollYProgress, [0, 1], ["0%", "4%"]);
   const tileY3 = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
-
-  const [wordIndex, setWordIndex] = useState(0);
-
-  useEffect(() => {
-    if (prefersReducedMotion) return;
-    const interval = setInterval(() => setWordIndex((i) => (i + 1) % floatingWords.length), 2200);
-    return () => clearInterval(interval);
-  }, [prefersReducedMotion]);
 
   return (
     <section
@@ -256,7 +246,7 @@ export default function Hero() {
           </motion.p>
 
           {/* Animated word */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9, duration: 0.6 }}
@@ -270,7 +260,7 @@ export default function Hero() {
             >
               {floatingWords[wordIndex]}
             </span>
-          </motion.div>
+          </motion.div> */}
 
           {/* Stats */}
           <motion.div
@@ -282,8 +272,6 @@ export default function Hero() {
             {[
               { num: "15+", label: "Years", sub: "经验" },
               { num: "500+", label: "Groups", sub: "团队" },
-              { num: "4", label: "Languages", sub: "语言" },
-              { num: "7", label: "Provinces", sub: "省份" },
             ].map((stat, i) => (
               <div key={stat.num} className="flex items-center">
                 {i > 0 && <span className="w-px h-9 bg-mountain-300/50 mr-9" aria-hidden="true" />}

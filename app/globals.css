@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 @source "../app/**/*.{ts,tsx}";
 
 @theme {
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'DM Sans', sans-serif;
-  --font-accent: 'Cormorant Garamond', serif;
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-body: var(--font-dm-sans), system-ui, sans-serif;
+  --font-accent: var(--font-cormorant), Georgia, serif;
 
   --color-mountain-50: #F8F5F0;
   --color-mountain-100: #F0EDE6;
@@ -49,9 +48,9 @@
 }
 
 :root {
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'DM Sans', sans-serif;
-  --font-accent: 'Cormorant Garamond', serif;
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-body: var(--font-dm-sans), system-ui, sans-serif;
+  --font-accent: var(--font-cormorant), Georgia, serif;
 }
 
 html {

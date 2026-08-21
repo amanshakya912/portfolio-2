@@ -71,7 +71,7 @@ export default function Footer() {
             © {new Date().getFullYear()} {guide.name}. Nepal Tourism Board Certified.
           </p>
           <p className="font-accent text-snow-200/20 text-xs italic">
-            "The mountains are calling and I must go." — John Muir
+            &ldquo;The mountains are calling and I must go.&rdquo; — John Muir
           </p>
           <p className="font-body text-snow-200/30 text-xs">
             Made with ❤️ for Nepal

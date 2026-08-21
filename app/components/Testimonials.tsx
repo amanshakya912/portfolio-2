@@ -56,7 +56,7 @@ export default function Testimonials() {
               className="bg-white rounded-3xl p-10 border border-mountain-300/40 text-center relative overflow-hidden shadow-sm"
             >
               {/* Quote mark */}
-              <div className="absolute top-6 left-8 font-display text-8xl text-gold-400/10 leading-none select-none">"</div>
+              <div className="absolute top-6 left-8 font-display text-8xl text-gold-400/10 leading-none select-none">&ldquo;</div>
               
               {/* Stars */}
               <div className="flex justify-center gap-1 mb-6">
@@ -68,7 +68,7 @@ export default function Testimonials() {
               </div>
 
               <blockquote className="font-accent text-xl sm:text-2xl italic text-mountain-900 leading-relaxed mb-8 relative z-10">
-                "{testimonials[active].text}"
+                &ldquo;{testimonials[active].text}&rdquo;
               </blockquote>
 
               <div className="flex items-center justify-center gap-4">

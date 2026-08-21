@@ -1,6 +1,6 @@
 "use client";
-import { useRef, useState } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence, useInView, LayoutGroup } from "framer-motion";
 import { destinations } from "@/app/data/portfolio";
 
 const difficultyColor: Record<string, string> = {
@@ -9,16 +9,60 @@ const difficultyColor: Record<string, string> = {
   Challenging: "text-red-400 border-red-500/30 bg-red-500/10",
 };
 
+// Deterministic "scattered on the table" tilt — same photo always lands
+// the same way, so it doesn't jump around on re-render.
+const TILTS = [-3, 2, -2, 3, -1.5, 1.5, -2.5, 2.5];
+const getTilt = (id: number) => TILTS[id % TILTS.length];
+const isWide = (id: number) => id % 4 === 0;
+
+const galleryEmoji = ["🏔️", "🛕", "⛰️", "🐘", "☸️", "🚣", "🌅", "🥾", "🗺️", "🕯️"];
+const heroEmoji = (id: number) =>
+  ["🏔️", "🛕", "⛰️", "🐘", "☸️", "🚣"][id % 6];
+const getFilmStrip = (dest: { id: number }) =>
+  [0, 1, 2, 3].map((n) => ({
+    id: n,
+    emoji: galleryEmoji[(dest.id + n) % galleryEmoji.length],
+    tilt: (n % 2 === 0 ? -1 : 1) * (4 + n * 2),
+  }));
+
 export default function Destinations() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
-  const [hovered, setHovered] = useState<number | null>(null);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const index = useMemo(
+    () => destinations.findIndex((d) => d.id === selectedId),
+    [selectedId]
+  );
+  const selected = index >= 0 ? destinations[index] : null;
+
+  const goTo = (dir: 1 | -1) => {
+    if (index < 0) return;
+    const next = (index + dir + destinations.length) % destinations.length;
+    setSelectedId(destinations[next].id);
+  };
+
+  useEffect(() => {
+    if (!selected) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedId(null);
+      if (e.key === "ArrowRight") goTo(1);
+      if (e.key === "ArrowLeft") goTo(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected]);
 
   return (
     <section id="destinations" ref={ref} className="relative py-32 bg-[#F0EDE6] overflow-hidden">
-      
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="absolute inset-0 opacity-[0.03] bg-[length:40px_40px] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)]" />
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -32,122 +76,196 @@ export default function Destinations() {
             <div className="w-12 h-px bg-gold-500" />
           </div>
           <h2 className="font-display text-5xl sm:text-6xl font-bold text-mountain-900 mb-4">
-            Nepal's <span className="gold-shimmer">Wonders</span>
+            Nepal&apos;s <span className="gold-shimmer">Wonders</span>
           </h2>
           <p className="font-body text-mountain-600 max-w-xl mx-auto text-lg">
-            From the highest peaks on Earth to sacred ancient valleys — Nepal holds worlds within worlds.
+            A field journal from the trail — click a photo to open the page.
           </p>
         </motion.div>
 
-        {/* Destinations grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {destinations.map((dest, i) => (
-            <motion.div
-              key={dest.id}
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: i * 0.1, duration: 0.7, ease: "easeOut" }}
-              onHoverStart={() => setHovered(dest.id)}
-              onHoverEnd={() => setHovered(null)}
-              onClick={() => setSelected(selected === dest.id ? null : dest.id)}
-              className="relative group cursor-pointer rounded-2xl overflow-hidden bg-white border border-mountain-300/40 hover:border-gold-400/40 transition-all duration-500 hover-lift shadow-sm"
-            >
-              {/* Image area */}
-              <div className="relative h-56 overflow-hidden">
-                <div className={`absolute inset-0 bg-gradient-to-br ${dest.colorClass} img-placeholder`}>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-                    <div className="text-5xl">
-                      {dest.id === 1 ? "🏔️" : dest.id === 2 ? "🛕" : dest.id === 3 ? "⛰️" : dest.id === 4 ? "🐘" : dest.id === 5 ? "☸️" : "🚣"}
+        <LayoutGroup>
+          {/* Photo board */}
+          <motion.div layout className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-14">
+            {destinations.map((dest, i) => {
+              if (dest.id === selectedId) return null; // lifted into the modal
+              const wide = isWide(dest.id);
+              const tilt = getTilt(dest.id);
+
+              return (
+                <motion.button
+                  key={dest.id}
+                  layoutId={`polaroid-${dest.id}`}
+                  layout
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  whileHover={{ rotate: 0, y: -8, scale: 1.03 }}
+                  style={{ rotate: tilt }}
+                  transition={{ delay: i * 0.05, duration: 0.5, ease: "easeOut" }}
+                  onClick={() => setSelectedId(dest.id)}
+                  className={`group relative text-left bg-white p-3 pb-10 rounded-sm shadow-md hover:shadow-2xl transition-shadow duration-300 ${
+                    wide ? "col-span-2" : "col-span-1"
+                  }`}
+                >
+                  {/* washi tape */}
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 w-14 h-5 bg-gold-400/40 rotate-[-2deg] shadow-sm pointer-events-none" />
+
+                  {/* photo */}
+                  <div
+                    className={`relative overflow-hidden bg-gradient-to-br ${dest.colorClass} img-placeholder ${
+                      wide ? "aspect-[16/9]" : "aspect-[4/5]"
+                    }`}
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center text-5xl opacity-80 group-hover:scale-110 transition-transform duration-500">
+                      {heroEmoji(dest.id)}
                     </div>
-                    <p className="font-body text-snow-200/40 text-xs text-center px-8">
-                      Replace with: /public/images/dest-{dest.id}.jpg
-                    </p>
+                    <div className="absolute inset-0 bg-mountain-900/0 group-hover:bg-mountain-900/10 transition-colors duration-300" />
                   </div>
-                </div>
-                {/* Overlay on hover */}
+
+                  {/* passport stamp */}
+                  <div className="absolute top-2 right-2 w-16 h-16 rounded-full border-2 border-dashed border-white/70 bg-mountain-900/30 backdrop-blur-[1px] flex items-center justify-center rotate-[12deg] group-hover:rotate-0 transition-transform duration-500">
+                    <div className="text-center leading-none">
+                      <p className="text-white text-[9px] font-body tracking-widest uppercase">↑ {dest.altitude}</p>
+                      <p className={`text-[8px] font-body mt-0.5 ${difficultyColor[dest.difficulty]?.split(" ")[0] || "text-white"}`}>
+                        {dest.difficulty}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* caption */}
+                  <div className="pt-3 px-1">
+                    <p className="font-body text-gold-500 text-[10px] tracking-[0.2em] uppercase mb-0.5">{dest.region}</p>
+                    <h3 className="font-accent text-xl text-mountain-900 leading-tight">{dest.name}</h3>
+                  </div>
+                </motion.button>
+              );
+            })}
+          </motion.div>
+
+          {/* Open journal page */}
+          <AnimatePresence>
+            {selected && (
+              <>
                 <motion.div
-                  animate={{ opacity: hovered === dest.id ? 1 : 0 }}
-                  className="absolute inset-0 bg-gradient-to-t from-mountain-900/70 via-mountain-900/30 to-transparent"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setSelectedId(null)}
+                  className="fixed inset-0 bg-mountain-900/80 backdrop-blur-sm z-40"
                 />
-                {/* Altitude badge */}
-                <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
-                  <span className="px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm font-body text-white text-xs">
-                    ↑ {dest.altitude}
-                  </span>
-                  <span className={`px-3 py-1 rounded-full border backdrop-blur-sm font-body text-xs ${difficultyColor[dest.difficulty] || "text-white"}`}>
-                    {dest.difficulty}
-                  </span>
-                </div>
-              </div>
 
-              {/* Card content */}
-              <div className="bg-white p-6">
-                <div className="mb-3">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-display text-xl font-bold text-mountain-900">{dest.name}</h3>
-                      <p className="font-accent text-gold-400 text-sm italic">{dest.chinese}</p>
-                    </div>
-                    <span className="font-body text-mountain-500 text-xs">{dest.region}</span>
-                  </div>
-                  <p className="font-body text-xs text-mountain-500 mt-1">{dest.nepali}</p>
-                </div>
+                <motion.div
+                  layoutId={`polaroid-${selected.id}`}
+                  className="fixed inset-4 md:inset-10 lg:inset-16 z-50 bg-[#F7F4EC] rounded-lg shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12"
+                >
+                  {/* prev/next */}
+                  <button
+                    onClick={() => goTo(-1)}
+                    aria-label="Previous destination"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-mountain-900 flex items-center justify-center shadow-md transition-colors"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    onClick={() => goTo(1)}
+                    aria-label="Next destination"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-mountain-900 flex items-center justify-center shadow-md transition-colors"
+                  >
+                    ›
+                  </button>
+                  <button
+                    onClick={() => setSelectedId(null)}
+                    aria-label="Close"
+                    className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-mountain-900/80 hover:bg-mountain-900 text-white flex items-center justify-center transition-colors"
+                  >
+                    ✕
+                  </button>
 
-                <p className="font-body text-mountain-700 text-sm leading-relaxed line-clamp-2 mb-4">
-                  {dest.description}
-                </p>
-
-                <div className="flex items-center gap-4 text-xs font-body text-mountain-600">
-                  <span className="flex items-center gap-1">
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    {dest.duration}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    {dest.season}
-                  </span>
-                </div>
-
-                {/* Expandable highlights */}
-                <AnimatePresence>
-                  {selected === dest.id && (
+                  {/* Left: big photo */}
+                  <div className="lg:col-span-5 relative p-6 lg:p-10 flex items-center justify-center bg-mountain-900/5">
                     <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.4 }}
-                      className="overflow-hidden"
+                      initial={{ rotate: -2, scale: 0.96, opacity: 0 }}
+                      animate={{ rotate: -2, scale: 1, opacity: 1 }}
+                      transition={{ delay: 0.15, duration: 0.4 }}
+                      className="relative w-full max-w-sm bg-white p-3 pb-8 shadow-xl"
                     >
-                      <div className="pt-4 border-t border-mountain-200 mt-4">
-                        <p className="font-body text-gold-400 text-xs tracking-widest uppercase mb-2">Highlights</p>
-                        <div className="flex flex-wrap gap-2">
-                          {dest.highlights.map((h) => (
-                            <span key={h} className="px-2.5 py-1 rounded-lg bg-mountain-100 font-body text-mountain-700 text-xs">{h}</span>
-                          ))}
-                        </div>
+                      <div className={`relative aspect-[4/5] overflow-hidden bg-gradient-to-br ${selected.colorClass} img-placeholder`}>
+                        <div className="absolute inset-0 flex items-center justify-center text-7xl opacity-80">📍</div>
+                      </div>
+                      <div className="absolute top-3 right-3 w-16 h-16 rounded-full border-2 border-dashed border-mountain-900/30 flex items-center justify-center rotate-[10deg]">
+                        <p className="text-mountain-900 text-[9px] font-body tracking-widest uppercase text-center leading-tight">
+                          ↑ {selected.altitude}
+                        </p>
                       </div>
                     </motion.div>
-                  )}
-                </AnimatePresence>
+                  </div>
 
-                <div className="mt-4 flex items-center text-gold-400 text-xs font-body">
-                  <span>{selected === dest.id ? "Less info" : "More info"}</span>
-                  <motion.svg
-                    animate={{ rotate: selected === dest.id ? 180 : 0 }}
-                    className="w-3.5 h-3.5 ml-1"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  {/* Right: journal entry */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2, duration: 0.4 }}
+                    className="lg:col-span-7 overflow-y-auto p-6 lg:p-10"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </motion.svg>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+                    <p className="font-body text-gold-500 text-xs tracking-[0.25em] uppercase mb-2">
+                      {selected.region} · {index + 1} / {destinations.length}
+                    </p>
+                    <h3 className="font-display text-4xl font-bold text-mountain-900 mb-1">{selected.name}</h3>
+                    <p className="font-accent text-lg italic text-mountain-600 mb-5">
+                      {selected.chinese} · {selected.nepali}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      <span className={`px-3 py-1 rounded-full border text-xs font-body ${difficultyColor[selected.difficulty] || "text-mountain-700 border-mountain-300"}`}>
+                        {selected.difficulty}
+                      </span>
+                      <span className="px-3 py-1 rounded-full border border-mountain-300 text-mountain-700 text-xs font-body">
+                        {selected.duration}
+                      </span>
+                      <span className="px-3 py-1 rounded-full border border-mountain-300 text-mountain-700 text-xs font-body">
+                        {selected.season}
+                      </span>
+                    </div>
+
+                    <p className="font-body text-mountain-700 text-sm leading-relaxed mb-8">
+                      {selected.description}
+                    </p>
+
+                    <div className="mb-8">
+                      <p className="font-body text-mountain-900 text-xs tracking-widest uppercase mb-3 border-b border-mountain-200 pb-2">
+                        Notes from the trail
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {selected.highlights.map((h: string) => (
+                          <span key={h} className="px-3 py-1.5 rounded-lg bg-mountain-100 font-body text-mountain-700 text-xs flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
+                            {h}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-4 flex-wrap pt-2">
+                      {getFilmStrip(selected).map((img) => (
+                        <motion.div
+                          key={img.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.3 + img.id * 0.08 }}
+                          style={{ rotate: img.tilt }}
+                          className="bg-white p-1.5 pb-4 shadow-md w-20"
+                        >
+                          <div className="aspect-square bg-gradient-to-br from-mountain-700 to-mountain-500 img-placeholder flex items-center justify-center text-xl">
+                            {img.emoji}
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
+        </LayoutGroup>
       </div>
     </section>
   );
