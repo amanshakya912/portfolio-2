@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Pemba Sherpa — Nepal Tourist Guide for Chinese Travelers",
+  title: "Amir Shakya — Nepal Tourist Guide for Chinese Travelers",
   description: "Professional Nepal tourist guide certified by Nepal Tourism Board. Specializing in guiding Chinese-speaking travelers through Nepal's most iconic destinations. 专业尼泊尔导游。",
   keywords: ["Nepal guide", "尼泊尔导游", "Himalaya trekking", "Kathmandu", "Everest Base Camp", "Chinese tour guide Nepal"],
   openGraph: {
-    title: "Pemba Sherpa — Nepal Guide",
+    title: "Amir Shakya — Nepal Guide",
     description: "15+ years guiding Chinese travelers through Nepal's wonders",
     type: "website",
   },
